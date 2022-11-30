@@ -23,6 +23,11 @@ func (c *Client) Read() {
 			return
 		}
 	}()
+	/*
+		c.Conn.SetCloseHandler(func(code int, text string) error {
+			c.Room.Unregister <- c
+			return c.Conn.Close()
+		})*/
 	for {
 		var e event.Event
 		err := c.Conn.ReadJSON(&e)

@@ -37,8 +37,9 @@ func (r *Room) Start() {
 			break
 		case client := <-r.Unregister:
 			delete(r.Clients, client)
-			for client, _ := range r.Clients {
-				err := client.WriteJSON(event.Event{
+			for c, _ := range r.Clients {
+
+				err := c.WriteJSON(event.Event{
 					Type: event.LeaveRoomEvent,
 					Data: event.EventMessage{
 						Client:    client.ID,
@@ -47,7 +48,7 @@ func (r *Room) Start() {
 					},
 				})
 				if err != nil {
-					log.Printf("Error in writing to client %s: %v\n", client.ID, err)
+					log.Printf("Error in writing to client %s: %v\n", c.ID, err)
 					return
 				}
 			}
