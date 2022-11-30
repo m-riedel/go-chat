@@ -1,0 +1,33 @@
+<div *ngIf="!hasSubmittedUsername" class="h-100-vh d-flex justify-content-center align-items-center">
+    <input type="text" [(ngModel)]="userName">
+    <button class="btn" (click)="onConnect()">Connect</button>
+</div>
+
+<div class="h-100-vh d-flex justify-content-end flex-column align-items-center" *ngIf="userName.length !== 0 && hasSubmittedUsername">
+    <div>
+        <div class="">
+            <div *ngFor="let event of events">
+                <div [ngSwitch]="event.type">
+                    <app-message [event]="event" *ngSwitchCase="1" [username]="userName" class="text-center">
+                    </app-message>
+                    <app-message [event]="event" *ngSwitchCase="2" class="" [username]="userName">
+                    </app-message>
+                    <app-message [event]="event" *ngSwitchCase="0" class="text-center" [username]="userName">
+                    </app-message>
+                </div>
+                
+            </div>
+            <div>
+                <div>
+                    <input type="text" [(ngModel)]="message.data.message">
+                    <button (click)="onSend()" class="btn">Send</button> 
+                    <button (click)="onDisconnect()" class="btn">Disconnect</button>
+                </div>
+                <div class="w-100 d-flex justify-content-center">
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</div>
+

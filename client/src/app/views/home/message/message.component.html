@@ -1,0 +1,18 @@
+<div>
+    <div *ngIf="event?.type === 2" [ngClass]="username === event?.data?.client ? 'text-right' : 'text-left'">
+        <span>
+            {{event?.data?.message}}
+        </span>
+    </div>
+    <div *ngIf="event?.type === 0">
+        <span>
+            User {{event?.data?.client}} has joined.
+        </span>
+    </div>
+    <div class="b-white" *ngIf="event?.type === 1">
+        <span>
+            User {{event?.data?.client}} has left.
+        </span>
+    </div>
+</div>
+
