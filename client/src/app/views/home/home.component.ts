@@ -27,6 +27,7 @@ export class HomeComponent implements OnInit {
     this.chatService.close();
     this.hasSubmittedUsername = false;
     this.userName = '';
+    this.events = [];
   }
 
   constructor(private chatService : ChatService) { }
