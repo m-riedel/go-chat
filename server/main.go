@@ -2,16 +2,16 @@ package main
 
 import (
 	"log"
-	"mriedel/chat/server/pkg/websocket"
+	"mriedel/chat/server/pkg/socket"
 	"net/http"
 )
 
 func setupRoutes() {
-	room := websocket.NewRoom()
-	go room.Start()
+	room := socket.NewRoom()
+	go room.Run()
 
 	http.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
-		websocket.Serve(room, w, r)
+		socket.Serve(room, w, r)
 	})
 }
 

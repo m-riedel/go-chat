@@ -1,8 +1,9 @@
-package websocket
+package socket
 
 import (
 	"github.com/gorilla/websocket"
 	"log"
+	"mriedel/chat/server/pkg/socket/event"
 	"net/http"
 )
 
@@ -28,7 +29,9 @@ func Serve(room *Room, w http.ResponseWriter, r *http.Request) {
 	client := &Client{
 		Conn: conn,
 		Room: room,
+		send: make(chan event.Event),
 	}
 	room.Register <- client
-	client.Read()
+	go client.readPump()
+	go client.writePump()
 }
