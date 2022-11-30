@@ -5,6 +5,7 @@ import (
 	"log"
 	"mriedel/chat/server/pkg/websocket/event"
 	"sync"
+	"time"
 )
 
 type Client struct {
@@ -29,7 +30,29 @@ func (c *Client) Read() {
 			log.Printf("Error in Reading the message: %v\n", err)
 			return
 		}
-		c.Room.Broadcast <- e
+		switch e.Type {
+		//case event.LeaveRoomEvent:
+		//case event.JoinRoomEvent:
+		case event.SetUsernameEvent:
+			c.ID = e.Data.Client
+			c.Room.Broadcast <- event.Event{
+				Type: event.JoinRoomEvent,
+				Data: event.EventMessage{
+					Client:    c.ID,
+					Timestamp: time.Now().String(),
+					Message:   "User joined the room!",
+				},
+			}
+		case event.MessageEvent:
+			c.Room.Broadcast <- event.Event{
+				Type: event.MessageEvent,
+				Data: event.EventMessage{
+					Client:    c.ID,
+					Timestamp: time.Now().String(),
+					Message:   e.Data.Message,
+				},
+			}
+		}
 	}
 }
 

@@ -3,6 +3,7 @@ package websocket
 import (
 	"log"
 	"mriedel/chat/server/pkg/websocket/event"
+	"time"
 )
 
 type Room struct {
@@ -17,23 +18,33 @@ func (r *Room) Start() {
 		select {
 		case client := <-r.Register:
 			r.Clients[client] = true
-			for client, _ := range r.Clients {
-				err := client.WriteJSON(event.Event{
-					Type: event.JoinRoomEvent,
-					Data: "User joined the Room",
-				})
-				if err != nil {
-					log.Printf("Error in writing to client %s: %v\n", client.ID, err)
-					return
-				}
-			}
+			log.Printf("client joined ")
+			/*
+				for client, _ := range r.Clients {
+					err := client.WriteJSON(event.Event{
+						Type: event.JoinRoomEvent,
+						Data: event.EventMessage{
+							Client:    "",
+							Timestamp: "",
+							Message:   "User joined the room",
+						},
+					})
+					if err != nil {
+						log.Printf("Error in writing to client %s: %v\n", client.ID, err)
+						return
+					}
+				}*/
 			break
 		case client := <-r.Unregister:
 			delete(r.Clients, client)
 			for client, _ := range r.Clients {
 				err := client.WriteJSON(event.Event{
 					Type: event.LeaveRoomEvent,
-					Data: "User left the Room",
+					Data: event.EventMessage{
+						Client:    client.ID,
+						Timestamp: time.Now().String(),
+						Message:   "User left the room",
+					},
 				})
 				if err != nil {
 					log.Printf("Error in writing to client %s: %v\n", client.ID, err)
